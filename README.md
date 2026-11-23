@@ -53,20 +53,6 @@ where $w_i$ is the weight of evaluation area $i$ and $p_{j\mid i}$ is the priori
 
 **Important methodological limitation:** Although Full mode collects sub-criterion priorities, **those weights do not currently enter the overall alternative score**. The ranking is therefore an **area-level exploratory result**, not a complete three-level AHP synthesis. Before definitive data collection, the consortium should either implement alternative assessments under each sub-criterion or formally justify the area-level aggregation approach. Unchanged sliders currently represent *equal importance*, so an unanswered comparison is not distinguished from an intentional equality judgement.
 
-## Benchmark data: provenance and limitations
-
-The revised HTML provides source links and explicitly identifies information awaiting technical validation. The public project material supports the broad concept of a modular platform, swappable batteries and three vehicle-use configurations; it does **not** establish final, independently verified specifications for each CM1/CM2/CM3 model.
-
-In particular:
-
-- The original **L6 / 60 km/h** combination was inconsistent with the **45 km/h L6e** regulatory limit; the actual homologation category and speed have **not** been inferred from the regulation.
-- Previously displayed prices, ranges, vehicle weights and individual battery specifications are **not presented as confirmed values**.
-- A **7–20 kWh** battery range, mentioned at project level in reporting material, must **not** be interpreted as a certified capacity for every variant.
-- Missing figures are presented as **“Pending validation”**, not as zero and not as evidence that one concept performs worse than another.
-- Partner-approved technical specifications, comparable market references, dated sources and a documented benchmark methodology are required before the survey is used as a final scientific instrument.
-
-Reference material: [ZEV-UP vehicle concept](https://zev-up.eu/zev-up-car/), [ZEV-UP vehicle design update](https://zev-up.eu/zev-up-finalises-complete-digital-design-for-its-modular-vehicles/), [CORDIS project reporting](https://cordis.europa.eu/project/id/101138721/reporting), and [EU Regulation 168/2013](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32013R0168).
-
 ## Technology stack
 
 - **Frontend:** static HTML, CSS and vanilla JavaScript; responsive, single-page questionnaire.
@@ -105,29 +91,6 @@ The browser submits the response to `zev_ahp_responses`. The revised interface r
 
 RLS is designed to allow public **INSERT** while restricting **SELECT/export** to authenticated users listed in `zev_ahp_admins`; administrator access is available from `#admin`. A public survey still requires safeguards against spam/automated submissions, a suitable privacy notice, retention rules, appropriate access controls and checks for personal-data risks in small respondent groups.
 
-## Deploy to Vercel from GitHub
-
-This is a **static HTML/CSS/JavaScript** application. No Next.js, React conversion or compilation step is necessary.
-
-1. **Prepare the entry point.** After validating the revised source, copy or rename `ZEV-UP_AHP_Survey_REVISIONE.html` to **`index.html`** at the repository root. Keep the revision file as a development reference if desired. Check all relative paths if assets are split into separate files.
-2. **Configure Supabase** according to the section above. For the current client-only HTML, the public project URL and publishable/anon key must be available to the browser; Vercel environment variables are **not automatically substituted into static HTML files**. Do not commit any private credentials. If you later need server-side secrets, implement protected server-side functions instead of exposing them in `index.html`.
-3. **Commit and push** the deployment-ready files to GitHub.
-4. In [Vercel's New Project page](https://vercel.com/new), choose **Import Git Repository**, authorise GitHub access if requested, and select the repository.
-5. Use these project settings for a plain static site:
-
-   | Setting | Value |
-   | --- | --- |
-   | Framework Preset | `Other` |
-   | Root Directory | `./` (repository root) |
-   | Build Command | None / leave empty |
-   | Output Directory | `.` (repository root, if required by the dashboard) |
-   | Install Command | None / leave empty |
-
-6. Select **Deploy**. Once deployment completes, open the assigned `*.vercel.app` URL and verify the full survey flow, browser-console errors, mobile layout, and an actual successful insert in `public.zev_ahp_responses`. Also verify that an unauthenticated visitor cannot query stored answers.
-7. **Update the Production hosting link** at the top of this README with your real Vercel deployment URL. For subsequent changes, push commits to the connected GitHub branch; Vercel will create new deployments automatically.
-8. **Retire or redirect the old Netlify site** only after the Vercel deployment and Supabase integration have been tested. If responses were saved outside the same Supabase project in the past, plan their migration separately; moving the frontend does not migrate external storage.
-
-> **Important:** The current Vercel production URL is not yet known. Do not treat the previous Netlify URL as evidence that the revised HTML or Supabase integration is live.
 
 ## Current limitations and next steps
 
