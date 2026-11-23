@@ -174,12 +174,12 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 <script>
 
 
-// NETLIFY / SUPABASE SETUP — replace ONLY the two public values below before publishing.
+// VERCEL / SUPABASE SETUP — public browser configuration.
 // NEVER paste a Supabase secret key or service_role key into a public HTML page.
 // The original file had no Supabase connection; this version does not pretend to save data when unconfigured.
 window.ZEV_SUPABASE_CONFIG = window.ZEV_SUPABASE_CONFIG || {
-  url: '',                  // e.g. https://YOUR-PROJECT.supabase.co
-  publishableKey: '',       // Supabase publishable key (or legacy anon key), NOT secret/service_role
+  url: 'https://ifvrkpyhqfqovpgdwrsv.supabase.co',
+  publishableKey: 'sb_publishable_PYdoWQbakIDmbbVvfvMe8w_qQSnq9X7',
 };
 const SURVEY_SCHEMA_VERSION = '2026-11-benchmark-v2';
 const RESPONSES_TABLE = 'zev_ahp_responses';
