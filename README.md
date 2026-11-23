@@ -3,12 +3,9 @@
 **A web-based, multi-criteria decision-support questionnaire for evaluating priorities and vehicle concepts in the ZEV-UP research project.**
 
 **Production hosting:** [Vercel](https://vercel.com/) — new deployment URL to be added after first release  
-**Previous deployment (Netlify):** [zev-up-ahp-survey.netlify.app](https://zev-up-ahp-survey.netlify.app/) — legacy link, not the destination for future updates  
 **Project:** [ZEV-UP](https://zev-up.eu/) — *Frugal Zero-Emission Vehicles for the Urban Passenger challenge*  
 **Programme:** Horizon Europe · Grant Agreement No. **101138721**  
 **Status:** Research prototype; benchmark and methodology require final consortium validation.
-
-> **Deployment note:** The project is migrating from Netlify to **Vercel**. The Netlify link above is retained only as a reference to the previous deployment. The new Vercel URL will be added after deployment; the updated survey is not live merely because its source file exists in the repository.
 
 ## About the project
 
@@ -86,42 +83,21 @@ No Node.js build process or server-side application is required to display the s
 | File | Purpose |
 | --- | --- |
 | `ZEV-UP_AHP_Survey.html` | Original survey implementation, retained as a reference. |
-| `ZEV-UP_AHP_Survey_REVISIONE.html` | Revised survey with benchmark provenance, explicit data limitations and Supabase persistence logic. |
-| `ZEV-UP_SUPABASE_SETUP.sql` | PostgreSQL schema, Row Level Security policies and administrator access setup. |
-| `ZEV-UP_REVISIONE_NOTE.md` | Detailed revision notes, verification findings and deployment considerations. |
 | `README.md` | Project overview, Supabase setup and Vercel deployment instructions. |
 | `index.html` | **Deployment entry point** to create from the validated revised survey before publishing on Vercel; it may not yet exist in the repository. |
 
 ## Local preview
 
-Open `ZEV-UP_AHP_Survey_REVISIONE.html` in a modern browser, or use a simple local HTTP server:
+Open `ZEV-UP_AHP_Survey.html` in a modern browser, or use a simple local HTTP server:
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000/ZEV-UP_AHP_Survey_REVISIONE.html`.
+Then open `http://localhost:8000/ZEV-UP_AHP_Survey.html`.
 
 The interface can be explored without credentials, but **successful submission requires Supabase configuration**.
 
-## Supabase configuration
-
-1. Create or choose a Supabase project and review any existing survey tables **before running migrations**.
-2. In the Supabase **SQL Editor**, review and execute `ZEV-UP_SUPABASE_SETUP.sql`. It creates `public.zev_ahp_responses` and `public.zev_ahp_admins` with the relevant RLS policies.
-3. Near the beginning of the revised HTML script, set the two **public client configuration values**:
-
-   ```js
-   window.ZEV_SUPABASE_CONFIG = {
-     url: 'https://YOUR-PROJECT.supabase.co',
-     publishableKey: 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY'
-   };
-   ```
-
-4. For administrator access, create an account in **Supabase Authentication**, then add its Auth user UUID to `public.zev_ahp_admins` as described in the SQL script.
-5. Submit a **test response** and verify that a record appears in `public.zev_ahp_responses`. Confirm that unauthenticated users **cannot read** submitted answers.
-6. Prepare the updated survey as `index.html` for **Vercel** (see deployment instructions below), then repeat the end-to-end test on the public site.
-
-**Never put a Supabase secret key or `service_role` key in frontend code.** The public `publishable`/legacy `anon` key is intended for browser use together with properly configured RLS.
 
 ### Data handling and administrator access
 
