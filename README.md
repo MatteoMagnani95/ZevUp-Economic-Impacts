@@ -2,12 +2,13 @@
 
 **A web-based, multi-criteria decision-support questionnaire for evaluating priorities and vehicle concepts in the ZEV-UP research project.**
 
-**Live survey (existing deployment):** [zev-up-ahp-survey.netlify.app](https://zev-up-ahp-survey.netlify.app/)  
+**Production hosting:** [Vercel](https://vercel.com/) — new deployment URL to be added after first release  
+**Previous deployment (Netlify):** [zev-up-ahp-survey.netlify.app](https://zev-up-ahp-survey.netlify.app/) — legacy link, not the destination for future updates  
 **Project:** [ZEV-UP](https://zev-up.eu/) — *Frugal Zero-Emission Vehicles for the Urban Passenger challenge*  
 **Programme:** Horizon Europe · Grant Agreement No. **101138721**  
 **Status:** Research prototype; benchmark and methodology require final consortium validation.
 
-> **Deployment note:** The live URL is the existing Netlify deployment. Changes in `ZEV-UP_AHP_Survey_REVISIONE.html` will not appear there until that version is configured and redeployed.
+> **Deployment note:** The project is migrating from Netlify to **Vercel**. The Netlify link above is retained only as a reference to the previous deployment. The new Vercel URL will be added after deployment; the updated survey is not live merely because its source file exists in the repository.
 
 ## About the project
 
@@ -74,7 +75,7 @@ Reference material: [ZEV-UP vehicle concept](https://zev-up.eu/zev-up-car/), [ZE
 - **Frontend:** static HTML, CSS and vanilla JavaScript; responsive, single-page questionnaire.
 - **AHP engine:** client-side matrix construction, weighting, consistency checks and result display.
 - **Database and authentication:** [Supabase](https://supabase.com/) (PostgreSQL, REST API, Auth and Row Level Security).
-- **Hosting:** [Netlify](https://www.netlify.com/) or another static-site host.
+- **Hosting:** [Vercel](https://vercel.com/) with automatic deployments from the GitHub repository.
 - **Third-party browser libraries:** Supabase JS v2, SheetJS/XLSX, QRCode.js and Google Fonts (loaded from CDNs).
 - **Administrator tools:** restricted response viewing and spreadsheet export.
 
@@ -88,7 +89,8 @@ No Node.js build process or server-side application is required to display the s
 | `ZEV-UP_AHP_Survey_REVISIONE.html` | Revised survey with benchmark provenance, explicit data limitations and Supabase persistence logic. |
 | `ZEV-UP_SUPABASE_SETUP.sql` | PostgreSQL schema, Row Level Security policies and administrator access setup. |
 | `ZEV-UP_REVISIONE_NOTE.md` | Detailed revision notes, verification findings and deployment considerations. |
-| `README.md` | Project overview and setup instructions. |
+| `README.md` | Project overview, Supabase setup and Vercel deployment instructions. |
+| `index.html` | **Deployment entry point** to create from the validated revised survey before publishing on Vercel; it may not yet exist in the repository. |
 
 ## Local preview
 
@@ -117,7 +119,7 @@ The interface can be explored without credentials, but **successful submission r
 
 4. For administrator access, create an account in **Supabase Authentication**, then add its Auth user UUID to `public.zev_ahp_admins` as described in the SQL script.
 5. Submit a **test response** and verify that a record appears in `public.zev_ahp_responses`. Confirm that unauthenticated users **cannot read** submitted answers.
-6. Deploy the configured HTML as `index.html` to Netlify (or an equivalent static host), then repeat the end-to-end test on the public site.
+6. Prepare the updated survey as `index.html` for **Vercel** (see deployment instructions below), then repeat the end-to-end test on the public site.
 
 **Never put a Supabase secret key or `service_role` key in frontend code.** The public `publishable`/legacy `anon` key is intended for browser use together with properly configured RLS.
 
@@ -126,6 +128,30 @@ The interface can be explored without credentials, but **successful submission r
 The browser submits the response to `zev_ahp_responses`. The revised interface reports success **only after the Supabase insert succeeds**; if it fails, the user sees an error and can export an unsaved JSON draft. Responses include country, stakeholder category, survey mode, pairwise judgements, weights and consistency information.
 
 RLS is designed to allow public **INSERT** while restricting **SELECT/export** to authenticated users listed in `zev_ahp_admins`; administrator access is available from `#admin`. A public survey still requires safeguards against spam/automated submissions, a suitable privacy notice, retention rules, appropriate access controls and checks for personal-data risks in small respondent groups.
+
+## Deploy to Vercel from GitHub
+
+This is a **static HTML/CSS/JavaScript** application. No Next.js, React conversion or compilation step is necessary.
+
+1. **Prepare the entry point.** After validating the revised source, copy or rename `ZEV-UP_AHP_Survey_REVISIONE.html` to **`index.html`** at the repository root. Keep the revision file as a development reference if desired. Check all relative paths if assets are split into separate files.
+2. **Configure Supabase** according to the section above. For the current client-only HTML, the public project URL and publishable/anon key must be available to the browser; Vercel environment variables are **not automatically substituted into static HTML files**. Do not commit any private credentials. If you later need server-side secrets, implement protected server-side functions instead of exposing them in `index.html`.
+3. **Commit and push** the deployment-ready files to GitHub.
+4. In [Vercel's New Project page](https://vercel.com/new), choose **Import Git Repository**, authorise GitHub access if requested, and select the repository.
+5. Use these project settings for a plain static site:
+
+   | Setting | Value |
+   | --- | --- |
+   | Framework Preset | `Other` |
+   | Root Directory | `./` (repository root) |
+   | Build Command | None / leave empty |
+   | Output Directory | `.` (repository root, if required by the dashboard) |
+   | Install Command | None / leave empty |
+
+6. Select **Deploy**. Once deployment completes, open the assigned `*.vercel.app` URL and verify the full survey flow, browser-console errors, mobile layout, and an actual successful insert in `public.zev_ahp_responses`. Also verify that an unauthenticated visitor cannot query stored answers.
+7. **Update the Production hosting link** at the top of this README with your real Vercel deployment URL. For subsequent changes, push commits to the connected GitHub branch; Vercel will create new deployments automatically.
+8. **Retire or redirect the old Netlify site** only after the Vercel deployment and Supabase integration have been tested. If responses were saved outside the same Supabase project in the past, plan their migration separately; moving the frontend does not migrate external storage.
+
+> **Important:** The current Vercel production URL is not yet known. Do not treat the previous Netlify URL as evidence that the revised HTML or Supabase integration is live.
 
 ## Current limitations and next steps
 
